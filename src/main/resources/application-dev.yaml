@@ -1,0 +1,19 @@
+spring:
+  config:
+    activate:
+      on-profile: dev
+
+  datasource:
+    driver-class-name: ${CS_DB_DRIVER_CLASSNAME}
+    url: jdbc:${CS_DB_DRIVER}://${CS_DB_HOST}:${CS_DB_PORT}/${CS_DATABASE}
+    username: ${CS_DB_USER}
+    password: ${CS_DB_PASS}
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        dialect: ${CS_HIBERNATE_DIALECT}
+  liquibase:
+    enabled: false
