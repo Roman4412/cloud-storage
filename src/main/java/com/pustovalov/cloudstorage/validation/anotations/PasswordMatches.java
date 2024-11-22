@@ -1,6 +1,6 @@
-package com.pustovalov.cloudstorage.service.validation.anotations;
+package com.pustovalov.cloudstorage.validation.anotations;
 
-import com.pustovalov.cloudstorage.service.validation.validators.PasswordMatchesValidator;
+import com.pustovalov.cloudstorage.validation.PasswordMatchesValidator;
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 

@@ -1,9 +1,10 @@
 package com.pustovalov.cloudstorage.service;
 
-import com.pustovalov.cloudstorage.dto.request.UserRegistrationData;
+import com.pustovalov.cloudstorage.dto.request.RegistrationRequest;
+import com.pustovalov.cloudstorage.dto.response.RegistrationResponse;
 
 public interface UserService {
 
-    void register(UserRegistrationData data);
+    RegistrationResponse register(RegistrationRequest data);
 
 }

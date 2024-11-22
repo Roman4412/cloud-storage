@@ -17,3 +17,8 @@ spring:
         dialect: ${CS_HIBERNATE_DIALECT}
   liquibase:
     enabled: false
+
+jwt:
+  issuer: localhost
+  secret: ${JWT_SECRET}
+  lifetime: 10h
