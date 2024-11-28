@@ -22,3 +22,8 @@ jwt:
   issuer: localhost
   secret: ${JWT_SECRET}
   lifetime: 10h
+
+logging:
+  level:
+    root: info
+    com.pustovalov.cloudstorage: debug

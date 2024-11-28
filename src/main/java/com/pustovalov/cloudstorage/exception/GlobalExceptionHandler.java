@@ -1,5 +1,6 @@
 package com.pustovalov.cloudstorage.exception;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ProblemDetail;
@@ -17,14 +18,15 @@ import java.util.Map;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
+@Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
-    //TODO добавить логирование
+    //TODO требуется рефакторинг
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ProblemDetail> handleMethodArgumentNotValidException(MethodArgumentNotValidException e,
                                                                                BindingResult bindingResult) {
-        e.printStackTrace();
+        String detail = "invalid data has been transmitted";
         Collector<FieldError, ?, List<String>> fieldErrorMessages = Collectors.mapping(FieldError::getDefaultMessage,
                                                                                        Collectors.toList());
         Map<String, List<String>> errorsGroupByFields = bindingResult.getFieldErrors()
@@ -33,9 +35,14 @@ public class GlobalExceptionHandler {
                                                                                                     fieldErrorMessages));
 
         ProblemDetail pd = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
-        pd.setDetail("The received data has not been validated");
+        pd.setDetail(detail);
         pd.setProperty("errors", errorsGroupByFields);
         pd.setProperty("timestamp", LocalDateTime.now());
+
+        log.info("{} - {} - validation errors: {}",
+                 e.getClass().getName(),
+                 detail,
+                 errorsGroupByFields);
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                              .contentType(MediaType.APPLICATION_PROBLEM_JSON)
@@ -44,9 +51,12 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ProblemDetail> handleOtherExceptions(Exception e) {
-        e.printStackTrace();
+        String detail = "unexpected server error";
+
+        log.error("{}", detail, e);
+
         ProblemDetail pd = ProblemDetail.forStatus(HttpStatus.INTERNAL_SERVER_ERROR);
-        pd.setDetail("Unexpected server error");
+        pd.setDetail(detail);
         pd.setProperty("timestamp", LocalDateTime.now());
 
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -55,9 +65,12 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(BadCredentialsException.class)
     public ResponseEntity<ProblemDetail> handleBadCredentialsException(BadCredentialsException e) {
-        e.printStackTrace();
+        String detail = "invalid username or password";
+
+        log.info("{} - {} ", e.getClass().getName(), detail);
+
         ProblemDetail pd = ProblemDetail.forStatus(HttpStatus.UNAUTHORIZED);
-        pd.setDetail("invalid username or password");
+        pd.setDetail(detail);
         pd.setProperty("timestamp", LocalDateTime.now());
 
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
@@ -66,9 +79,12 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(ObjectAlreadyExistException.class)
     public ResponseEntity<ProblemDetail> handleObjectAlreadyExistException(ObjectAlreadyExistException e) {
-        e.printStackTrace();
+        String detail = "such a user has already been registered";
+
+        log.error("{}", detail, e);
+
         ProblemDetail pd = ProblemDetail.forStatus(HttpStatus.CONFLICT);
-        pd.setDetail("such a user has already been registered");
+        pd.setDetail(detail);
         pd.setProperty("timestamp", LocalDateTime.now());
 
         return ResponseEntity.status(HttpStatus.CONFLICT)
