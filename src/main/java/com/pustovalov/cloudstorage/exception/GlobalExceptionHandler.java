@@ -21,7 +21,6 @@ import java.util.stream.Collectors;
 @Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
-    //TODO требуется рефакторинг
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ProblemDetail> handleMethodArgumentNotValidException(MethodArgumentNotValidException e,
@@ -34,15 +33,13 @@ public class GlobalExceptionHandler {
                                                                      .collect(Collectors.groupingBy(FieldError::getField,
                                                                                                     fieldErrorMessages));
 
-        ProblemDetail pd = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
-        pd.setDetail(detail);
-        pd.setProperty("errors", errorsGroupByFields);
-        pd.setProperty("timestamp", LocalDateTime.now());
-
         log.info("{} - {} - validation errors: {}",
                  e.getClass().getName(),
                  detail,
                  errorsGroupByFields);
+
+        ProblemDetail pd = createProblemDetail(HttpStatus.BAD_REQUEST, detail);
+        pd.setProperty("errors", errorsGroupByFields);
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                              .contentType(MediaType.APPLICATION_PROBLEM_JSON)
@@ -52,43 +49,37 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ProblemDetail> handleOtherExceptions(Exception e) {
         String detail = "unexpected server error";
-
         log.error("{}", detail, e);
 
-        ProblemDetail pd = ProblemDetail.forStatus(HttpStatus.INTERNAL_SERVER_ERROR);
-        pd.setDetail(detail);
-        pd.setProperty("timestamp", LocalDateTime.now());
-
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                             .body(pd);
+                             .contentType(MediaType.APPLICATION_PROBLEM_JSON)
+                             .body(createProblemDetail(HttpStatus.INTERNAL_SERVER_ERROR, detail));
     }
 
     @ExceptionHandler(BadCredentialsException.class)
     public ResponseEntity<ProblemDetail> handleBadCredentialsException(BadCredentialsException e) {
         String detail = "invalid username or password";
-
         log.info("{} - {} ", e.getClass().getName(), detail);
 
-        ProblemDetail pd = ProblemDetail.forStatus(HttpStatus.UNAUTHORIZED);
-        pd.setDetail(detail);
-        pd.setProperty("timestamp", LocalDateTime.now());
-
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                             .body(pd);
+                             .contentType(MediaType.APPLICATION_PROBLEM_JSON)
+                             .body(createProblemDetail(HttpStatus.UNAUTHORIZED, detail));
     }
 
     @ExceptionHandler(ObjectAlreadyExistException.class)
     public ResponseEntity<ProblemDetail> handleObjectAlreadyExistException(ObjectAlreadyExistException e) {
         String detail = "such a user has already been registered";
-
         log.error("{}", detail, e);
 
-        ProblemDetail pd = ProblemDetail.forStatus(HttpStatus.CONFLICT);
-        pd.setDetail(detail);
-        pd.setProperty("timestamp", LocalDateTime.now());
-
         return ResponseEntity.status(HttpStatus.CONFLICT)
-                             .body(pd);
+                             .contentType(MediaType.APPLICATION_PROBLEM_JSON)
+                             .body(createProblemDetail(HttpStatus.CONFLICT, detail));
+    }
+
+    private ProblemDetail createProblemDetail(HttpStatus status, String detail) {
+        ProblemDetail pd = ProblemDetail.forStatusAndDetail(status, detail);
+        pd.setProperty("timestamp", LocalDateTime.now());
+        return pd;
     }
 
 }
