@@ -11,9 +11,19 @@ spring:
   jpa:
     show-sql: true
     hibernate:
-      ddl-auto: none
+      ddl-auto: create-drop
     properties:
       hibernate:
         dialect: ${CS_HIBERNATE_DIALECT}
   liquibase:
     enabled: false
+
+jwt:
+  issuer: localhost
+  secret: ${JWT_SECRET}
+  lifetime: 10h
+
+logging:
+  level:
+    root: info
+    com.pustovalov.cloudstorage: debug
