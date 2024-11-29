@@ -6,7 +6,7 @@ import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
 import java.time.Duration;
@@ -15,17 +15,23 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Slf4j
-@Service
+@Component
 public class JwtManager {
 
-    @Value("${jwt.secret}")
-    private String secret;
+    private final Duration lifetime;
 
-    @Value("${jwt.lifetime}")
-    private Duration lifetime;
+    private final String issuer;
 
-    @Value("${jwt.issuer}")
-    private String issuer;
+    private final SecretKey secretKey;
+
+    public JwtManager(@Value("${jwt.lifetime}") Duration lifetime,
+                      @Value("${jwt.issuer}") String issuer,
+                      @Value("${jwt.secret}") String secret) {
+
+        this.lifetime = lifetime;
+        this.issuer = issuer;
+        secretKey = Keys.hmacShaKeyFor(Decoders.BASE64URL.decode(secret));
+    }
 
     public String generateToken(UserDetails userDetails) {
         Date issuedDate = new Date();
@@ -41,23 +47,19 @@ public class JwtManager {
                    .expiration(expiredDate)
                    .subject(username)
                    .claims(claims)
-                   .signWith(generateKey(secret))
+                   .signWith(secretKey)
                    .compact();
     }
 
     public String parseClaims(String token, String key) {
         log.debug("parsing {} from token {}", key, token);
         return Jwts.parser()
-                   .verifyWith(generateKey(secret))
+                   .verifyWith(secretKey)
                    .build()
                    .parseSignedClaims(token)
                    .getPayload()
                    .get(key)
                    .toString();
-    }
-
-    private SecretKey generateKey(String secret) {
-        return Keys.hmacShaKeyFor(Decoders.BASE64URL.decode(secret));
     }
 
 }

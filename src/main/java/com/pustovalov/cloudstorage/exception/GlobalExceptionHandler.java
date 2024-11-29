@@ -26,12 +26,13 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ProblemDetail> handleMethodArgumentNotValidException(MethodArgumentNotValidException e,
                                                                                BindingResult bindingResult) {
         String detail = "invalid data has been transmitted";
-        Collector<FieldError, ?, List<String>> fieldErrorMessages = Collectors.mapping(FieldError::getDefaultMessage,
-                                                                                       Collectors.toList());
-        Map<String, List<String>> errorsGroupByFields = bindingResult.getFieldErrors()
-                                                                     .stream()
-                                                                     .collect(Collectors.groupingBy(FieldError::getField,
-                                                                                                    fieldErrorMessages));
+        Collector<FieldError, ?, List<String>> fieldErrorMessages =
+                Collectors.mapping(FieldError::getDefaultMessage, Collectors.toList());
+
+        Map<String, List<String>> errorsGroupByFields =
+                bindingResult.getFieldErrors()
+                             .stream()
+                             .collect(Collectors.groupingBy(FieldError::getField, fieldErrorMessages));
 
         log.info("{} - {} - validation errors: {}",
                  e.getClass().getName(),
@@ -40,40 +41,31 @@ public class GlobalExceptionHandler {
 
         ProblemDetail pd = createProblemDetail(HttpStatus.BAD_REQUEST, detail);
         pd.setProperty("errors", errorsGroupByFields);
-
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                             .contentType(MediaType.APPLICATION_PROBLEM_JSON)
-                             .body(pd);
+        return ResponseEntity.of(pd).build();
     }
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<ProblemDetail> handleOtherExceptions(Exception e) {
-        String detail = "unexpected server error";
-        log.error("{}", detail, e);
-
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                             .contentType(MediaType.APPLICATION_PROBLEM_JSON)
-                             .body(createProblemDetail(HttpStatus.INTERNAL_SERVER_ERROR, detail));
-    }
+//    @ExceptionHandler(Exception.class)
+//    public ResponseEntity<ProblemDetail> handleOtherExceptions(Exception e) {
+//        String detail = "unexpected server error";
+//        log.error("{}", detail, e);
+//        return ResponseEntity.of(createProblemDetail(HttpStatus.INTERNAL_SERVER_ERROR, detail))
+//                             .build();
+//    }
 
     @ExceptionHandler(BadCredentialsException.class)
     public ResponseEntity<ProblemDetail> handleBadCredentialsException(BadCredentialsException e) {
         String detail = "invalid username or password";
         log.info("{} - {} ", e.getClass().getName(), detail);
-
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                             .contentType(MediaType.APPLICATION_PROBLEM_JSON)
-                             .body(createProblemDetail(HttpStatus.UNAUTHORIZED, detail));
+        return ResponseEntity.of(createProblemDetail(HttpStatus.UNAUTHORIZED, detail))
+                             .build();
     }
 
     @ExceptionHandler(ObjectAlreadyExistException.class)
     public ResponseEntity<ProblemDetail> handleObjectAlreadyExistException(ObjectAlreadyExistException e) {
         String detail = "such a user has already been registered";
         log.error("{}", detail, e);
-
-        return ResponseEntity.status(HttpStatus.CONFLICT)
-                             .contentType(MediaType.APPLICATION_PROBLEM_JSON)
-                             .body(createProblemDetail(HttpStatus.CONFLICT, detail));
+        return ResponseEntity.of(createProblemDetail(HttpStatus.CONFLICT, detail))
+                             .build();
     }
 
     private ProblemDetail createProblemDetail(HttpStatus status, String detail) {

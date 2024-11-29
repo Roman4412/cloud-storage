@@ -1,7 +1,6 @@
 package com.pustovalov.cloudstorage.service;
 
 import com.pustovalov.cloudstorage.dto.request.RegistrationRequest;
-import com.pustovalov.cloudstorage.dto.response.RegistrationResponse;
 import com.pustovalov.cloudstorage.entity.User;
 import com.pustovalov.cloudstorage.exception.ObjectAlreadyExistException;
 import com.pustovalov.cloudstorage.mapper.UserMapper;
@@ -23,10 +22,13 @@ public class UserServiceImpl implements UserService {
 
     private final UserMapper mapper;
 
-    public RegistrationResponse register(RegistrationRequest data) {
-        User savedUser;
+    public void register(RegistrationRequest data) {
         try {
-            savedUser = repository.save(mapper.toEntity(data));
+            User savedUser = repository.save(mapper.toEntity(data));
+            log.debug("successful registration (username:{}, id:{})",
+                      savedUser.getUsername(),
+                      savedUser.getId());
+
         } catch (DataIntegrityViolationException e) {
             if (e.getCause() instanceof ConstraintViolationException cause) {
                 if (Objects.equals(cause.getConstraintName(), "users_unique_username_idx")) {
@@ -36,10 +38,6 @@ public class UserServiceImpl implements UserService {
             log.error("error when registering a user {}", data.username(), e);
             throw e;
         }
-        log.debug("successful registration (username:{}, id:{})",
-                  savedUser.getUsername(),
-                  savedUser.getId());
-        return mapper.toDto(savedUser);
     }
 
 }
