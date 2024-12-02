@@ -27,3 +27,8 @@ logging:
   level:
     root: info
     com.pustovalov.cloudstorage: debug
+
+minio:
+  url: ${CS_MINIO_URL}
+  access-key: ${CS_MINIO_ACCESS_KEY}
+  secret-key: ${CS_MINIO_SECRET_KEY}
