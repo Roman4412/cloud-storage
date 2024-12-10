@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Set;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -15,6 +17,8 @@ import lombok.Setter;
         @UniqueConstraint(name = "users_unique_username_idx", columnNames = "username")
 })
 public class User {
+
+    //TODO Добавить индексы в миграциях
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,5 +34,8 @@ public class User {
         this.username = username;
         this.password = password;
     }
+
+    @OneToMany(mappedBy = "user", orphanRemoval = true)
+    private Set<S3Object> objects;
 
 }

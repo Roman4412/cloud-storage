@@ -12,6 +12,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
+import java.util.Optional;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -22,22 +23,22 @@ public class UserServiceImpl implements UserService {
 
     private final UserMapper mapper;
 
-    public void register(RegistrationRequest data) {
+    public User register(RegistrationRequest data) {
         try {
-            User savedUser = repository.save(mapper.toEntity(data));
-            log.debug("successful registration (username:{}, id:{})",
-                      savedUser.getUsername(),
-                      savedUser.getId());
-
+            return repository.save(mapper.toEntity(data));
         } catch (DataIntegrityViolationException e) {
             if (e.getCause() instanceof ConstraintViolationException cause) {
                 if (Objects.equals(cause.getConstraintName(), "users_unique_username_idx")) {
                     throw new ObjectAlreadyExistException("user %s already exist".formatted(data.username()));
                 }
             }
-            log.error("error when registering a user {}", data.username(), e);
             throw e;
         }
+    }
+
+    @Override
+    public Optional<User> findByUsername(String username) {
+        return repository.findByUsername(username);
     }
 
 }

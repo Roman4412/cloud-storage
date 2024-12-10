@@ -29,7 +29,7 @@ public class SecurityConfig {
 
     private final JwtFilter jwtFilter;
 
-//    private static final String[] SECURE_PATHS = {};
+    private static final String[] SECURE_PATHS = {"/folders", "/folders/**"};
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -37,7 +37,7 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
 //                                .cors()
                 .authorizeHttpRequests(authorize -> authorize
-//                        .requestMatchers(SECURE_PATHS).authenticated()
+                        .requestMatchers(SECURE_PATHS).authenticated()
                         .anyRequest().permitAll())
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling(customizer -> customizer.authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)))

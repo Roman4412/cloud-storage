@@ -1,6 +1,8 @@
 package com.pustovalov.cloudstorage.controller;
 
 import com.pustovalov.cloudstorage.dto.request.RegistrationRequest;
+import com.pustovalov.cloudstorage.entity.User;
+import com.pustovalov.cloudstorage.service.FolderService;
 import com.pustovalov.cloudstorage.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -18,9 +20,12 @@ public class UserController {
 
     private final UserService userService;
 
+    private final FolderService folderService;
+
     @PostMapping
     public ResponseEntity<?> register(@Validated @RequestBody RegistrationRequest request) {
-        userService.register(request);
+        User createdUser = userService.register(request);
+        folderService.createPersonalFolder(createdUser);
 
         return ResponseEntity.status(HttpStatus.CREATED)
                              .build();

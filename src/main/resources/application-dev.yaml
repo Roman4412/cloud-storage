@@ -11,10 +11,10 @@ spring:
   jpa:
     show-sql: true
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
     properties:
       hibernate:
-        dialect: ${CS_HIBERNATE_DIALECT}
+#        dialect: ${CS_HIBERNATE_DIALECT}
   liquibase:
     enabled: false
 
@@ -32,3 +32,4 @@ minio:
   url: ${CS_MINIO_URL}
   access-key: ${CS_MINIO_ACCESS_KEY}
   secret-key: ${CS_MINIO_SECRET_KEY}
+  default-bucket: dev-bucket

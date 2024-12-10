@@ -1,8 +1,8 @@
 package com.pustovalov.cloudstorage.exception;
 
+import io.jsonwebtoken.JwtException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -44,14 +44,6 @@ public class GlobalExceptionHandler {
         return ResponseEntity.of(pd).build();
     }
 
-//    @ExceptionHandler(Exception.class)
-//    public ResponseEntity<ProblemDetail> handleOtherExceptions(Exception e) {
-//        String detail = "unexpected server error";
-//        log.error("{}", detail, e);
-//        return ResponseEntity.of(createProblemDetail(HttpStatus.INTERNAL_SERVER_ERROR, detail))
-//                             .build();
-//    }
-
     @ExceptionHandler(BadCredentialsException.class)
     public ResponseEntity<ProblemDetail> handleBadCredentialsException(BadCredentialsException e) {
         String detail = "invalid username or password";
@@ -62,10 +54,23 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(ObjectAlreadyExistException.class)
     public ResponseEntity<ProblemDetail> handleObjectAlreadyExistException(ObjectAlreadyExistException e) {
-        String detail = "such a user has already been registered";
+        String detail = "such a object has already exist";
         log.error("{}", detail, e);
         return ResponseEntity.of(createProblemDetail(HttpStatus.CONFLICT, detail))
                              .build();
+    }
+
+    @ExceptionHandler(ObjectNotFoundException.class)
+    public ResponseEntity<ProblemDetail> handleObjectNotFoundException(ObjectNotFoundException e) {
+        String detail = "object not found";
+        log.error("{}", detail, e);
+        return ResponseEntity.of(createProblemDetail(HttpStatus.NOT_FOUND, detail))
+                .build();
+    }
+
+    @ExceptionHandler(JwtException.class)
+    public ResponseEntity<?> handleJwtException() {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 
     private ProblemDetail createProblemDetail(HttpStatus status, String detail) {
