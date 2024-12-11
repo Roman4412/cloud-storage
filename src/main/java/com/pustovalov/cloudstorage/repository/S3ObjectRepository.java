@@ -14,15 +14,11 @@ public interface S3ObjectRepository extends CrudRepository<S3Object, Long> {
 
     List<S3Object> findAllByPathStartsWith(String path);
 
-    Optional<S3Object> findByObjectKey(String objectKey);
-
     Optional<S3Object> findByPathAndName(String path, String name);
 
     void deleteAllByPathStartingWith(String path);
 
     void deleteByPathAndName(String path, String name);
 
-    /*@Modifying
-    @Query
-    S3Object updatePathByPath(String newPath, String path);*/
+    void deleteById(Long id);
 }
