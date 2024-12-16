@@ -2,9 +2,9 @@ package com.pustovalov.cloudstorage.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
-@ToString(exclude = "user")
-@EqualsAndHashCode(exclude = "user")
+@SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -12,34 +12,33 @@ import lombok.*;
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "type")
+@Table(name = "s3objects", uniqueConstraints = {
+        @UniqueConstraint(name = "s3objects_unique_object_key_idx", columnNames = "object_key")
+})
 public abstract class S3Object {
-
-    //TODO Добавить индексы, при написании миграций
-    //TODO рефакторинг: путь в виде кастомного типа Path, а не строки
-    //TODO objKey не должен изменяться т к по нему будет происходить поиск в minio , нужен констрэинт на это
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private Long id;
+    protected Long id;
 
     @Column(name = "name", nullable = false)
-    private String name;
+    protected String name;
 
-    @Column(name = "object_key", unique = true)
-    private String objectKey;
+    @Column(name = "object_key")
+    protected String objectKey;
 
-    @Column(name = "path")
-    private String path;
+    @Column(name = "parent")
+    protected String parent;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    protected User user;
 
-    public S3Object(String name, String path, String objectKey, User user) {
+    public S3Object(String name, String objectKey, String parent, User user) {
         this.name = name;
         this.objectKey = objectKey;
-        this.path = path;
+        this.parent = parent;
         this.user = user;
     }
 }

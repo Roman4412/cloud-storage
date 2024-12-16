@@ -29,7 +29,7 @@ public class SecurityConfig {
 
     private final JwtFilter jwtFilter;
 
-    private static final String[] SECURE_PATHS = {"/folders", "/folders/**", "/files", "/files/**"};
+    private static final String[] SECURE_PATHS = {"/folders/**", "/files/**", "/objects/**"};
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {

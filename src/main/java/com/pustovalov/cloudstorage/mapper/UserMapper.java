@@ -1,6 +1,6 @@
 package com.pustovalov.cloudstorage.mapper;
 
-import com.pustovalov.cloudstorage.dto.request.RegistrationRequest;
+import com.pustovalov.cloudstorage.dto.request.UserRegistrationRequest;
 import com.pustovalov.cloudstorage.entity.User;
 import org.mapstruct.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +14,7 @@ public abstract class UserMapper {
     private PasswordEncoder passwordEncoder;
 
     @Mapping(target = "password", source = "password", qualifiedByName = "encodePassword")
-    public abstract User toEntity(RegistrationRequest request);
+    public abstract User toEntity(UserRegistrationRequest request);
 
     @Named("encodePassword")
     protected String encodePassword(String password) {

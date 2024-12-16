@@ -1,20 +1,18 @@
 package com.pustovalov.cloudstorage.service;
 
-import com.pustovalov.cloudstorage.dto.DeleteFileDto;
-import com.pustovalov.cloudstorage.dto.DownloadFileDto;
-import com.pustovalov.cloudstorage.dto.RenameFileDto;
-import com.pustovalov.cloudstorage.dto.UploadFileDto;
-import org.springframework.core.io.InputStreamResource;
-
-import java.io.InputStream;
+import com.pustovalov.cloudstorage.dto.request.FileDeleteRequest;
+import com.pustovalov.cloudstorage.dto.request.FileDownloadRequest;
+import com.pustovalov.cloudstorage.dto.request.FileRenameRequest;
+import com.pustovalov.cloudstorage.dto.request.FileUploadRequest;
+import com.pustovalov.cloudstorage.dto.response.FileDownloadResponse;
 
 public interface FileService {
 
-    void save(UploadFileDto dto);
+    void save(FileUploadRequest dto);
 
-    void rename(RenameFileDto dto);
+    void rename(FileRenameRequest dto);
 
-    void delete(DeleteFileDto dto);
+    void delete(FileDeleteRequest dto);
 
-    InputStreamResource download(DownloadFileDto dto);
+    FileDownloadResponse download(FileDownloadRequest dto);
 }

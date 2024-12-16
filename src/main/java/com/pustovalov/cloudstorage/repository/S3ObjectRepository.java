@@ -10,15 +10,14 @@ import java.util.Optional;
 @Repository
 public interface S3ObjectRepository extends CrudRepository<S3Object, Long> {
 
-    List<S3Object> findAllByPath(String path);
+    Optional<S3Object> findByObjectKey(String objectKey);
 
-    List<S3Object> findAllByPathStartsWith(String path);
+    List<S3Object> findAllByParentStartsWith(String objectKey);
 
-    Optional<S3Object> findByPathAndName(String path, String name);
+    List<S3Object> findAllByParent(String objectKey);
 
-    void deleteAllByPathStartingWith(String path);
+    Optional<S3Object> findByUserUsernameAndObjectKeyEndsWith(String username, String objectKeyPart);
 
-    void deleteByPathAndName(String path, String name);
+    void deleteAllByParentStartsWith(String objectKey);
 
-    void deleteById(Long id);
 }

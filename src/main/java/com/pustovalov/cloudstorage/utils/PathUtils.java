@@ -1,28 +1,20 @@
 package com.pustovalov.cloudstorage.utils;
 
+import com.pustovalov.cloudstorage.entity.User;
+
 public class PathUtils {
 
-    public static final String PATH_SEPARATOR = "/";
+    public static final String SLASH = "/";
 
-    public static String parsePath(String requestURI) {
-        return requestURI.replace("/folders", "");
+    public static String getRootNameFor(User user) {
+        return "%d-%s-root".formatted(user.getId(), user.getUsername());
     }
 
-    public static String parsePath(String requestURI, String name) {
-        String uriWithoutFolderName = requestURI.replace(PATH_SEPARATOR + name, "");
-        return uriWithoutFolderName.replace("/folders", "");
+    public static String removeRoot(String path) {
+        String[] parts = path.split(SLASH);
+        int length = (parts[1] + SLASH).length();
+        int endIndex = path.length();
+        return path.substring(length, endIndex);
     }
 
-    public static String parseName(String uri) {
-        String[] pathParts = uri.split(PATH_SEPARATOR);
-        return pathParts[pathParts.length - 1];
-    }
-
-    public static String buildSubFoldersPath(String folderName, String fullPath) {
-        return fullPath + PATH_SEPARATOR + folderName + PATH_SEPARATOR;
-    }
-
-    public static String buildFullPath(String username, String path) {
-        return PATH_SEPARATOR + username + path;
-    }
 }

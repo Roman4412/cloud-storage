@@ -18,8 +18,6 @@ import java.util.Set;
 })
 public class User {
 
-    //TODO Добавить индексы в миграциях
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
