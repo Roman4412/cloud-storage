@@ -1,0 +1,672 @@
+{
+	"info": {
+		"_postman_id": "170c3fe4-4269-4ac5-9985-064e3132247f",
+		"name": "CloudStorageCollection",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "27984361"
+	},
+	"item": [
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "register user",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"username\": \"login\",\r\n  \"password\": \"password\",\r\n  \"confirmPassword\": \"password\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/auth/registration",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"auth",
+								"registration"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "login user",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"username\": \"login\",\r\n  \"password\": \"password\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/auth/login",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Folders",
+			"item": [
+				{
+					"name": "create",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/folders?name=newFolder",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"folders"
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": "newFolder"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "invalid name",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/folders?name=folder/",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"folders"
+									],
+									"query": [
+										{
+											"key": "name",
+											"value": "folder/"
+										}
+									]
+								}
+							},
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": null
+						},
+						{
+							"name": "in a non-existent directory",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{prod}}}/folders/someNotExistsDirectory/?name=folder",
+									"host": [
+										"{{prod}}}"
+									],
+									"path": [
+										"folders",
+										"someNotExistsDirectory",
+										""
+									],
+									"query": [
+										{
+											"key": "name",
+											"value": "folder"
+										}
+									]
+								}
+							},
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": null
+						}
+					]
+				},
+				{
+					"name": "get content",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{prod}}/folders",
+							"host": [
+								"{{prod}}"
+							],
+							"path": [
+								"folders"
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": "folder1d.__",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "a non-existent directory",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/folders/some-not-exists-directory",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"folders",
+										"some-not-exists-directory"
+									]
+								}
+							},
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": null
+						}
+					]
+				},
+				{
+					"name": "rename",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/folders/folder?newName=folder-with-new-name",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"folders",
+								"folder"
+							],
+							"query": [
+								{
+									"key": "newName",
+									"value": "folder-with-new-name"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "invalid new name",
+							"originalRequest": {
+								"method": "PATCH",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/folders/folder?newName=folder-with-new-name//",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"folders",
+										"folder"
+									],
+									"query": [
+										{
+											"key": "newName",
+											"value": "folder-with-new-name//"
+										}
+									]
+								}
+							},
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": null
+						},
+						{
+							"name": "a non-existent directory",
+							"originalRequest": {
+								"method": "PATCH",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/folders/some-not-exists-directory?newName=folder-with-new-name",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"folders",
+										"some-not-exists-directory"
+									],
+									"query": [
+										{
+											"key": "newName",
+											"value": "folder-with-new-name"
+										}
+									]
+								}
+							},
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": null
+						},
+						{
+							"name": "rename root",
+							"originalRequest": {
+								"method": "PATCH",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/folders?newName=new-root-name",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"folders"
+									],
+									"query": [
+										{
+											"key": "newName",
+											"value": "new-root-name"
+										}
+									]
+								}
+							},
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": null
+						}
+					]
+				},
+				{
+					"name": "delete folder",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiIxOTUuMTMzLjE5Ni4xMjYiLCJpYXQiOjE3MzU0NDkyODQsImV4cCI6MTczNTUzNTY4NCwic3ViIjoibG9naW4iLCJ1c2VybmFtZSI6ImxvZ2luIn0.Y9zAqretQmDLEwtXkw1SChbCOwN919Qv6VfvNCJpH9AwUvFMdu_vkn75sVa2HPufe6Vas2gm_vAbgBABl2c-hg",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/folders/folder",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"folders",
+								"folder"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "a non-existent directory",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/folders/some-not-exists-directory",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"folders",
+										"some-not-exists-directory"
+									]
+								}
+							},
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": null
+						},
+						{
+							"name": "delete root",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/folders",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"folders"
+									]
+								}
+							},
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": null
+						}
+					]
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiIxOTUuMTMzLjE5Ni4xMjYiLCJpYXQiOjE3MzU0NDkyODQsImV4cCI6MTczNTUzNTY4NCwic3ViIjoibG9naW4iLCJ1c2VybmFtZSI6ImxvZ2luIn0.Y9zAqretQmDLEwtXkw1SChbCOwN919Qv6VfvNCJpH9AwUvFMdu_vkn75sVa2HPufe6Vas2gm_vAbgBABl2c-hg",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Files",
+			"item": [
+				{
+					"name": "upload file",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Successful POST request\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": "postman-cloud:///1efc5e14-cdf9-47d0-8b00-bde4bc3f7d3a"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{host}}/files",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"files"
+							]
+						},
+						"description": "This is a POST request, submitting data to an API via the request body. This request submits JSON data, and the data is reflected in the response.\n\nA successful POST request typically returns a `200 OK` or `201 Created` response code."
+					},
+					"response": []
+				},
+				{
+					"name": "rename file",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Successful PUT request\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([200, 201, 204]);",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/files/http_methods_characteristicks.jpg?newName=new_file_name.png",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"files",
+								"http_methods_characteristicks.jpg"
+							],
+							"query": [
+								{
+									"key": "newName",
+									"value": "new_file_name.png"
+								}
+							]
+						},
+						"description": "This is a PUT request and it is used to overwrite an existing piece of data. For instance, after you create an entity with a POST request, you may want to modify that later. You can do that using a PUT request. You typically identify the entity being updated by including an identifier in the URL (eg. `id=1`).\n\nA successful PUT request typically returns a `200 OK`, `201 Created`, or `204 No Content` response code."
+					},
+					"response": []
+				},
+				{
+					"name": "download file",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/files/new_file_name.png",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"files",
+								"new_file_name.png"
+							]
+						},
+						"description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
+					},
+					"response": []
+				},
+				{
+					"name": "delete file",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Successful DELETE request\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([200, 202, 204]);",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/files/new_file_name.png",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"files",
+								"new_file_name.png"
+							]
+						},
+						"description": "This is a DELETE request, and it is used to delete data that was previously created via a POST request. You typically identify the entity being updated by including an identifier in the URL (eg. `id=1`).\n\nA successful DELETE request typically returns a `200 OK`, `202 Accepted`, or `204 No Content` response code."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Storage",
+			"item": [
+				{
+					"name": "findObjects",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/objects?name=folder",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"objects"
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": "folder"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "downloadZip",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/objects/folder-with-new-name",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"objects",
+								"folder-with-new-name"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiIxOTUuMTMzLjE5Ni4xMjYiLCJpYXQiOjE3MzU0NDkyODQsImV4cCI6MTczNTUzNTY4NCwic3ViIjoibG9naW4iLCJ1c2VybmFtZSI6ImxvZ2luIn0.Y9zAqretQmDLEwtXkw1SChbCOwN919Qv6VfvNCJpH9AwUvFMdu_vkn75sVa2HPufe6Vas2gm_vAbgBABl2c-hg",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "prod",
+			"value": "http://195.133.196.126:8080",
+			"type": "string"
+		},
+		{
+			"key": "dev",
+			"value": "http://localhost:8080",
+			"type": "string"
+		},
+		{
+			"key": "host",
+			"value": "http://localhost:8080",
+			"type": "string"
+		},
+		{
+			"value": "",
+			"type": "string"
+		}
+	]
+}
