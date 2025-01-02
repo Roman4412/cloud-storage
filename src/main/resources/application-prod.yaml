@@ -1,19 +1,22 @@
 spring:
   config:
     activate:
-      on-profile: dev
+      on-profile: prod
+
   datasource:
     driver-class-name: ${CS_DB_DRIVER_CLASSNAME}
     url: jdbc:${CS_DB_DRIVER}://${CS_DB_HOST}:${CS_DB_PORT}/${CS_DATABASE}
     username: ${CS_DB_USER}
     password: ${CS_DB_PASS}
+
   jpa:
-    show-sql: true
     hibernate:
       ddl-auto: none
+
   liquibase:
     enabled: true
     change-log: db/changelog/changelog-master.sql
+
   servlet:
     multipart:
       max-file-size: 100MB
@@ -24,12 +27,8 @@ jwt:
   secret: ${JWT_SECRET}
   lifetime: 24h
 
-logging:
-  level:
-    root: info
-    com.pustovalov.cloudstorage: debug
 minio:
   url: ${CS_MINIO_URL}
-  access-key: vvcHlgBO6C3qk0JRoCt2
-  secret-key: nbFRRA7pUpjGjmUq2w5YmInCBw0CDtoJkrJE1rUQ
-  default-bucket: dev-bucket
+  access-key: ${CS_MINIO_ACCESS_KEY}
+  secret-key: ${CS_MINIO_SECRET_KEY}
+  default-bucket: prod-storage
